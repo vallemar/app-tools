@@ -2,8 +2,9 @@
     "packageManager": "yarn@4.3.1",
     "scripts": {
         "createBase64Key": "openssl base64 < $KEYSTORE_PATH | tr -d '\n' | tee base64.txt",
-        "postinstall": "patch-package",
+        "postinstall": "./node_modules/.bin/patch-package",
         "prepare": "ts-patch install -s",
+        "patchpackage": "./node_modules/.bin/patch-package",
         "prepare.ios.sentry": "NS_SENTRY=1 PLAY_STORE_BUILD=1 ns prepare ios --release --env.adhoc_sentry",
         "run.ios.production": "PLAY_STORE_BUILD=1 ns run ios --release --env.production --env.adhoc",
         "run.ios.production.sentry": "NS_SENTRY=1 PLAY_STORE_BUILD=1 ns run ios --release --env.production --env.adhoc_sentry",
@@ -21,9 +22,9 @@
         "build.android.baselineprofile": "npm run prepare.android.benchmark ; ./$APP_BUILD_PATH/android/gradlew -p ./$APP_BUILD_PATH/android :benchmark:pixel2Api31BenchmarkAndroidTest -Pandroid.testoptions.manageddevices.emulator.gpu=\"swiftshader_indirect\" -Pandroid.testInstrumentationRunnerArguments.androidx.benchmark.enabledRules=BaselineProfile -Dorg.gradle.workers.max=4 --stacktrace; mv -f ./$APP_BUILD_PATH/android/benchmark/build/outputs/managed_device_android_test_additional_output/pixel2Api31/BaselineProfileGenerator_startup-baseline-prof.txt $APP_RESOURCES/Android/src/main/baseline-prof.txt",
         "svelte-check": "svelte-check --compiler-warnings 'a11y-no-onchange:ignore,a11y-label-has-associated-control:ignore,a11y-autofocus:ignore,illegal-attribute-character:ignore'",
         "postinstall": "npm run setup",
-        "setup": "npm run submodules",
+        "setup": "npm run submodules && npm run patchpackage",
         "submodules": "git submodule update --init",
-        "sync": "node ./tools/sync.js",
-        "update": "node ./tools/update.js"
+        "sync": "node ./tools/sync.mjs",
+        "update": "node ./tools/update.mjs"
     }
 }

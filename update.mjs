@@ -1,13 +1,11 @@
-const fs = require('fs');
-const exec = require('child_process').exec;
-const { execSync } = require('child_process');
-
+import { execSync } from 'child_process';
+import { readdirSync, statSync } from 'fs';
 
 const validDirectories = ['tools'];
 
 function getDirectories(path) {
-    return fs.readdirSync(path).filter(function (file) {
-        return fs.statSync(path + '/' + file).isDirectory();
+    return readdirSync(path).filter(function (file) {
+        return statSync(path + '/' + file).isDirectory();
     });
 }
 

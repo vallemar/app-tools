@@ -22,16 +22,7 @@
         "noFallthroughCasesInSwitch": true,
         "resolveJsonModule": true,
         "lib": ["esnext", "es2017", "dom"],
-        "types": ["node", "svelte-native", "geojson", "offscreencanvas"],
-        "baseUrl": ".",
-        "paths": {
-            "~/*": ["app/*"],
-            "kiss-orm": ["node_modules/@akylas/kiss-orm"],
-            "kiss-orm/*": ["node_modules/@akylas/kiss-orm/*"],
-            "@nativescript/core": ["node_modules/@akylas/nativescript"],
-            "@nativescript/core/*": ["node_modules/@akylas/nativescript/*"]
-        }
+        "types": ["node", "svelte-native"],
     },
-    "include": ["app/**/*", "typings/*.d.ts"],
-    "exclude": ["node_modules"]
+    "exclude": ["**/node_modules"]
 }

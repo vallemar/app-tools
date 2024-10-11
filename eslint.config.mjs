@@ -14,7 +14,7 @@ export default [
     // stylistic.configs['recommended-flat'],
     ...eslintPluginSvelte.configs['flat/recommended'],
     {
-        ignores: ['**/node_modules/**/*', 'app/assets/**', 'platforms/**'],
+        ignores: ['**/node_modules/**/*', '**/app/assets/**', '**/platforms/**'],
         languageOptions: {
             parser: tsParser,
             ecmaVersion: 2022,
