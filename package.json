@@ -1,5 +1,5 @@
 {
-    "name": "@nativescript-community/plugin-seed-tools",
+    "name": "@akylas/nativescript-app-tools",
     "version": "1.0.0",
     "dependencies": {
         "@akylas/nativescript-android-runtime": "8.8.5",
