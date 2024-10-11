@@ -48,7 +48,7 @@ function compareFile(file1, file2) {
 
 function handleCommonFile(file, directory) {
     console.log('handleCommonFile', file, directory);
-    const destFile = `./${directory}${file}`;
+    const destFile = `./${directory.replace('_template','')}${file}`;
     const inFile = `./tools/common/${directory}${file}`;
     if (lstatSync(inFile).isDirectory()) {
         readdirSync(inFile).forEach((file2) => handleCommonFile(file2, directory + file + '/'));
@@ -83,6 +83,6 @@ checkAndUpdate(commonPackageJSON['scripts'], 'scripts');
 
 writeFileSync('./package.json', JSON.stringify(pluginPackageJSON, 0, 4) + '\n');
 
-updateDotEnv();
+// updateDotEnv();
 
 console.log('Common files and package.json have been synced.');

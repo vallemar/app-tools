@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="fastlane.lanes">
+    
+    
+    
+      
+      <testcase classname="fastlane.lanes" name="00: Verifying fastlane version" time="0.000269308">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="01: opt_out_usage" time="9.7763e-05">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="02: Switch to android checkGitStatus lane" time="0.000122839">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="03: Switch to android build_flavor lane" time="8.6579e-05">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="04: ./node_modules/.bin/get-version android version" time="0.844419594">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="05: ./node_modules/.bin/get-version android code" time="0.808140104">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="06: Switch to android build lane" time="0.000176343">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="07: npm run build.android.production.fdroid" time="105.797132091">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="08: push_to_git_remote" time="1.517546607">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="09: Switch to android get_changelog lane" time="9.8369e-05">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="10: analyze_commits" time="0.020161501">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="11: conventional_changelog" time="0.002975535">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="12: set_github_release" time="7.307544165">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="13: git_tag_exists" time="0.002178331">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="14: add_git_tag" time="0.004362311">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="15: push_git_tags" time="1.74327071">
+        
+      </testcase>
+    
+      
+      <testcase classname="fastlane.lanes" name="16: push_to_git_remote" time="1.431448422">
+        
+      </testcase>
+    
+  </testsuite>
+</testsuites>
