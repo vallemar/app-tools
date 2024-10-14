@@ -23,6 +23,15 @@
         "resolveJsonModule": true,
         "lib": ["esnext", "es2017", "dom"],
         "types": ["node", "svelte-native"],
+        "paths": {
+            "~/*": ["../app/*"],
+            "@shared/*": ["./app/*"],
+            "kiss-orm": ["../node_modules/@akylas/kiss-orm"],
+            "kiss-orm/*": ["../node_modules/@akylas/kiss-orm/*"],
+            "@nativescript/core": ["../node_modules/@akylas/nativescript"],
+            "@nativescript/core/*": ["../node_modules/@akylas/nativescript/*"]
+        }
     },
+    "include": ["../.*.js", "*.js", "*.mjs", "../*.mjs", "./app/**/*.svelte", "./app/**/*.ts", "../app/**/*.ts", "../app/**/*.svelte", "../typings/*.d.ts"],
     "exclude": ["**/node_modules"]
 }
