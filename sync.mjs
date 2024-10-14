@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { copyFileSync, existsSync, lstatSync, readFileSync, readdirSync, writeFileSync } from 'fs';
+import { copyFileSync, existsSync, lstatSync, mkdir, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
 import { config, set as dotEnvSet } from '@dotenvx/dotenvx';
 import { exec, execSync } from 'child_process';
 
@@ -48,9 +48,12 @@ function compareFile(file1, file2) {
 
 function handleCommonFile(file, directory) {
     console.log('handleCommonFile', file, directory);
-    const destFile = `./${directory.replace('_template','')}${file}`;
+    const destFile = `./${directory.replace('_template', '')}${file}`;
     const inFile = `./tools/common/${directory}${file}`;
     if (lstatSync(inFile).isDirectory()) {
+        if (!existsSync(destFile)) {
+            mkdirSync(destFile);
+        }
         readdirSync(inFile).forEach((file2) => handleCommonFile(file2, directory + file + '/'));
     } else {
         if (!existsSync(destFile)) {
@@ -71,7 +74,7 @@ function updateDotEnv() {
     Object.keys(processEnvTemplate).forEach((k) => {
         if (!processEnv[k]) {
             console.log('adding missing env data', k, processEnvTemplate[k]);
-            execSync(`./node_modules/.bin/dotenvx set ${k} --plain -- '${processEnvTemplate[k]}'`)
+            execSync(`./node_modules/.bin/dotenvx set ${k} --plain -- '${processEnvTemplate[k]}'`);
         }
     });
 }
