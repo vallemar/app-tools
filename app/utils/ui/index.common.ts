@@ -2,7 +2,7 @@ import { InAppBrowser } from '@akylas/nativescript-inappbrowser';
 import { lc } from '@nativescript-community/l';
 import { AlertDialog, alert } from '@nativescript-community/ui-material-dialogs';
 import { SnackBarOptions, showSnack as mdShowSnack } from '@nativescript-community/ui-material-snackbar';
-import { Utils, View, ViewBase } from '@nativescript/core';
+import { Application, Utils, View, ViewBase } from '@nativescript/core';
 import type LoadingIndicator__SvelteComponent_ from '@shared/components/LoadingIndicator.svelte';
 import LoadingIndicator from '@shared/components/LoadingIndicator.svelte';
 import { showError } from '@shared/utils/showError';
@@ -35,6 +35,7 @@ export function createView<T extends View>(claz: new () => T, props: Partial<Pic
 
 export async function showSnack(options: SnackBarOptions) {
     try {
+        options.view = options.view || Application.getRootView();
         return mdShowSnack(options);
     } catch (error) {}
 }
