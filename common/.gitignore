@@ -1,7 +1,7 @@
 # NativeScript application
 hooks
-platforms
-node_modules/
+/platforms
+node_modules
 
 certs
 /package-lock.json
@@ -15,6 +15,13 @@ app/**/*.js
 /dist
 /Gemfile.lock
 
+#android
+*.aar
+
+#iOS
+*.framework
+/typings/x86_64
+*.xcframework
 
 # NativeScript Template
 *.js.map
@@ -35,7 +42,8 @@ yarn-error.log*
 .cloud
 .project
 .gradle
-.env
+.env*
+!.env.ci
 .yarn
 tmp/
 ._.DS_Store
@@ -50,9 +58,11 @@ dist
 
 
 **/Android/src/main/res/values*/strings.xml
-App_Resources/Android/src/main/res/values*/strings.xml
+**/src/main/res/values*/strings.xml
 **/iOS/*.lproj/Localizable.strings
 **/iOS/*.lproj/InfoPlist.strings
+**/iOS/*.lproj/Root.strings
+**/iOS/Settings.bundle/*.lproj
 
 timeline*.json
 times*.html
@@ -65,6 +75,10 @@ app/assets/map/**
 /firmwares
 /gpx
 vendor
+build
+/vendor
+.cxx
+/fastlane/report.xml
 
 #alpimaps
 app/**/*.LICENSE.txt
@@ -78,3 +92,11 @@ dev_assets/styles/base/fonts/osm.ttf
 dev_assets/styles/inner_cleaned/fonts/materialdesignicons-webfont.ttf
 dev_assets/styles/**/*.xml
 dev_assets/styles/test*
+
+#documents
+opencv/**/*
+!opencv/**/README.md
+tesseract/**/*
+!tesseract/**/README.md
+/webpdfviewer/**/*.css
+/app/assets/**/*.html
