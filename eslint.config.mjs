@@ -3,14 +3,16 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
 import eslintPluginSvelte from 'eslint-plugin-svelte';
 // import stylistic from '@stylistic/eslint-plugin';
+import sort from 'eslint-plugin-sort';
+import globals from 'globals';
 import svelteParser from 'svelte-eslint-parser';
 import tseslint from 'typescript-eslint';
-import globals from 'globals';
 const ignoreWarnings = ['a11y-no-onchange', 'a11y-label-hhas-associated-control', 'illegal-attribute-character'];
 export default [
     ...tseslint.configs.recommendedTypeChecked,
     eslintPluginPrettierRecommended,
     eslintConfigPrettier,
+    sort.configs['flat/recommended'],
     // stylistic.configs['recommended-flat'],
     ...eslintPluginSvelte.configs['flat/recommended'],
     {
@@ -93,6 +95,7 @@ export default [
             '@typescript-eslint/no-unused-expressions': 'off',
             '@typescript-eslint/no-unsafe-function-type': 'off', // '@stylistic/type-annotation-spacing': 'error',
             '@typescript-eslint/prefer-promise-reject-errors': 'off',
+            '@typescript-eslint/prefer-destructuring': 'off',
             // '@stylistic/semi': ['error'],
             // '@stylistic/member-delimiter-style': 'error',
             // '@stylistic/quotes': [
@@ -124,6 +127,12 @@ export default [
                     memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single']
                 }
             ],
+            'sort/destructuring-properties': ['warn', { caseSensitive: false, natural: true }],
+            'sort/exports': 'off',
+            'sort/export-members': 'off',
+            'sort/imports': 'off',
+            'sort/import-members': 'off',
+            'sort/object-properties': 'off',
             'linebreak-style': 'off',
             'max-classes-per-file': 'off',
             'max-len': [
