@@ -25,6 +25,7 @@
         "setup": "npm run submodules && npm run patchpackage",
         "submodules": "git submodule update --init",
         "sync": "node ./tools/sync.mjs",
-        "update": "node ./tools/update.mjs"
+        "update": "node ./tools/update.mjs",
+        "set_version":"node tools/scripts/set-version.mjs set-version"
     }
 }
