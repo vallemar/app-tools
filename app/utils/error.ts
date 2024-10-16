@@ -1,6 +1,7 @@
 import { l, lc } from '@nativescript-community/l';
 import { BaseError } from 'make-error';
-import type { HttpsRequestOptions as HTTPSOptions, Headers } from '@nativescript-community/https';
+import type { HttpsRequestOptions as HTTPSOptions, Headers, HttpsRequestOptions } from '@nativescript-community/https';
+import { wrapNativeException } from '@nativescript/core/utils';
 
 Error.stackTraceLimit = Infinity;
 
@@ -185,4 +186,18 @@ export class HTTPError extends CustomError {
             'HTTPError'
         );
     }
+}
+
+export function wrapNativeHttpException(error, requestParams: HttpsRequestOptions) {
+    return wrapNativeException(error, (message) => {
+        if (/(SocketTimeout|ConnectException|SocketException|SSLException|UnknownHost)/.test(message)) {
+            return new TimeoutError();
+        } else {
+            return new HTTPError({
+                message,
+                statusCode: -1,
+                requestParams
+            });
+        }
+    });
 }
