@@ -68,7 +68,7 @@ export function scale(node, { delay = 0, duration = 400, easing = easings.easeIn
     }));
 }
 
-export function conditionalEvent(node, { condition, event, callback }) {
+export function conditionalEvent(node, { callback, condition, event }) {
     let toRemove;
     if (condition) {
         toRemove = callback;
