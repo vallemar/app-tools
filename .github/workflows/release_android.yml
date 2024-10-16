@@ -179,5 +179,5 @@ jobs:
         with:
           name: APK
           path: |
-            **/app-release.apk
+            **/app-*-release.apk
           retention-days: 7
