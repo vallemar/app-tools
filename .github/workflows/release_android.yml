@@ -1,0 +1,183 @@
+name: 'release'
+
+on:
+  workflow_call:
+    # Introduced 'inputs' to define parameters that can be passed when calling this workflow
+    inputs:
+      release_type:
+        description: "Release type"
+        required: true
+        type: string
+        default: patch
+      flavor:
+        description: "App flavor"
+        required: false
+        type: string
+      publish:
+        description: "Should we publish?"
+        default: false
+        required: false
+        type: string
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          filter: tree:0
+          submodules: true
+      
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          name: Martin Guillon
+          email: dev@akylas.fr
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3' # Not needed with a `.ruby-version` or `.tool-versions`
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          cache: gradle
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - uses: nttld/setup-ndk@v1
+        id: setup-ndk
+        with:
+          ndk-version: r25c
+          local-cache: true
+
+      - name: Install NativeScript
+        run: |
+          python3 -m pip install --upgrade pip six
+          npm i -g @akylas/nativescript-cli --ignore-scripts --legacy-peer-deps
+          ns usage-reporting disable
+          ns error-reporting disable
+      
+      - name: install jq
+        run: sudo apt-get install jq
+      
+      - name: Enable CorePack
+        run: |
+          corepack enable 
+          yarn config get globalFolder # the yarn command will ensure the correct yarn version is downloaded and installed
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn config get globalFolder)"
+
+      - name: Remove package.json resolutions
+        run: echo "`jq 'delpaths([["resolutions"]])' package.json`" > package.json
+
+      - uses: actions/cache@v4
+        name: Handle node_modules Cache
+        id: yarn-node_modules # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-node_modules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-node_modules-
+
+      - uses: actions/cache@v4
+        if: steps.yarn-node_modules.outputs.cache-hit != 'true'
+        name: Handle Yarn cache
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install deps
+        if: steps.yarn-node_modules.outputs.cache-hit != 'true'
+        uses: bahmutov/npm-install@v1
+        with:
+          install-command: yarn install --silent
+        env: 
+          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+      
+      - uses: oNaiPs/secrets-to-env-action@v1
+        with:
+          secrets: ${{ toJSON(secrets) }}
+
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v2.3.0
+        with:
+          mode: ci
+          load-mode: strict
+      
+      - name: Generate flavor ci file name
+        id: define_flavor_ci_string
+        run: |
+          echo "FLAVOR_CI_FILENAME=.env.ci.${{ inputs.flavor }}" >> $GITHUB_ENV
+          echo "FLAVOR_CI_MODE=ci.${{ inputs.flavor }}" >> $GITHUB_ENV
+
+      - name: Load flavor .env file
+        uses: xom9ikk/dotenv@v2.3.0
+        if: ${{ hashFiles(env.FLAVOR_CI_FILENAME) != '' }}
+        with:
+          mode: ${{ env.FLAVOR_CI_MODE }}
+          load-mode: strict
+  
+      - name: Test
+        run: |
+          ns config --json
+
+      - name: update Version
+        id: update_version
+        if: inputs.release_type != 'none'
+        run: |
+          echo "change version to ${{ inputs.release_type }}"
+          npx set-version android ${{ inputs.release_type }}
+          npx get-version android version
+          echo "VERSION_STR=$(npx get-version android version)"  > $GITHUB_ENV
+
+      - name: Run shell prepare script
+        if: ${{ hashFiles('scripts/ci.prepare.sh') != '' }}
+        run: |
+          sh scripts/ci.prepare.sh --platform android --flavor ${{ inputs.flavor }} --version "${{ env.VERSION_STR }}"
+
+      - name: Decode Keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PATH: ${{ secrets.KEYSTORE_PATH }}
+        run: |
+          mkdir -p "$(dirname "$KEYSTORE_PATH")"
+          echo $KEYSTORE_BASE64 | base64 -d > $KEYSTORE_PATH
+
+      - name: publish beta
+        if: inputs.publish == 'true'
+        run: |
+          bundle exec fastlane android beta publish:${{ inputs.publish }}
+      
+      - name: publish github
+        run: |
+          bundle exec fastlane android github publish:${{ inputs.publish }}
+      
+      - uses: actions/upload-artifact@v4
+        if: inputs.publish !='true'
+        with:
+          name: APK
+          path: |
+            **/app-release.apk
+          retention-days: 7
