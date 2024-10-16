@@ -1,61 +1,82 @@
+type Color = import('@nativescript/core').Color;
+
 declare module 'svelte/internal' {
     export function get_current_component();
 }
+type MultiPlatform<T> = T & {
+    [K in keyof T as `ios:${K}`]: T[K];
+} & {
+    [K in keyof T as `android:${K}`]: T[K];
+};
 
 declare namespace svelteNative.JSX {
     type Override<What, With> = Omit<What, keyof With> & With;
-    type TViewAugmentedAttributes = Override<
-        TViewAttributes,
-        {
-            disableCss?: boolean;
-            rippleColor?: string;
-            sharedTransitionTag?: string;
-            verticalAlignment?: string;
-            dynamicElevationOffset?: string | number;
-            elevation?: string | number;
-            'on:closingModally'?: (args: ShownModallyData) => void;
-            // "on:shownModally"?: (args: ShownModallyData) => void;
-        }
-    >;
 
-    type TButtonAugmentedAttributes = Override<
-        TButtonAttributes,
+    type IntrinsicElementsAugmented = Override<
+        TIntrinsicElements,
         {
-            variant?: string;
-            shape?: string;
+            mdbutton: ButtonAttributes;
+        } & {
+            [K in keyof TIntrinsicElements]: MultiPlatform<TIntrinsicElements[K]>;
         }
     >;
-    type TImageAugmentedAttributes = Override<
-        TImageAttributes,
-        {
-            noCache?: boolean;
-            placeholderImageUri?: string;
-            failureImageUri?: string;
-            imageRotation?: number;
-            colorMatrix?: number[];
-            blurRadius?: number;
-            fadeDuration?: number;
-            contextOptions?: any;
-            'on:rotateAnimated'?: (args: EventData) => void;
-        }
-    >;
-    type TLabelAugmentedAttributes = Override<
-        TLabelAttributes,
-        {
-            linkColor?: string;
-            autoFontSize?: boolean;
-            verticalTextAlignment?: string;
-            maxLines?: number;
-            minFontSize?: number;
-            maxFontSize?: number;
-            lineBreak?: string;
-            html?: string;
-            selectable?: boolean;
-            'ios:selectable'?: boolean;
-            onlinkTap?;
-            'on:linkTap'?;
-        }
-    >;
+    interface ViewAttributes {
+        defaultVisualState?: string;
+        'prop:mainContent'?;
+        'prop:leftDrawer'?;
+        'prop:rightDrawer'?;
+        'prop:bottomDrawer'?;
+        'prop:topDrawer'?;
+        disableCss?: boolean;
+        rippleColor?: string | Color;
+        sharedTransitionTag?: string;
+        verticalAlignment?: string;
+        dynamicElevationOffset?: string | number;
+        elevation?: string | number;
+        'on:closingModally'?: (args: ShownModallyData) => void;
+        // "on:shownModally"?: (args: ShownModallyData) => void;
+    }
+
+    interface ButtonAttributes {
+        variant?: string;
+        shape?: string;
+    }
+
+    interface ImageAttributes {
+        noCache?: boolean;
+        placeholderImageUri?: string;
+        failureImageUri?: string;
+        imageRotation?: number;
+        colorMatrix?: number[];
+        blurRadius?: number;
+        fadeDuration?: number;
+        contextOptions?: any;
+        'on:rotateAnimated'?: (args: EventData) => void;
+    }
+    interface LabelAttributes {
+        linkColor?: string;
+        autoFontSize?: boolean;
+        maxLines?: number;
+        minFontSize?: number;
+        maxFontSize?: number;
+        lineBreak?: string;
+        html?: string;
+        selectable?: boolean;
+        'ios:selectable'?: boolean;
+        onlinkTap?;
+        'on:linkTap'?;
+    }
+    interface TextFieldAttributes {
+        floating?: boolean | string;
+        variant?: string;
+        placeholder?: string;
+        placeholderColor?: string | Color;
+        'on:returnPress'?: (args) => void;
+    }
+    interface TextBaseAttributes {
+        verticalTextAlignment?: string;
+        text?: string | number;
+    }
     interface SpanAttributes {
         verticalAlignment?: string;
         verticalTextAlignment?: string;
@@ -66,46 +87,23 @@ declare namespace svelteNative.JSX {
     }
     interface SliderAttributes {
         stepSize?: number;
-        trackBackgroundColor?: string;
+        trackBackgroundColor?: string | Color;
     }
     interface ProgressAttributes {
         padding?: number | string;
     }
-    type TPageAugmentedAttributes = Override<
-        TPageAttributes,
-        {
-            'on:sharedElementTo'?: (args) => void;
-            'on:sharedElementFrom'?: (args) => void;
-            navigationBarColor?: string;
-            statusBarColor?: string;
-            screenOrientation?: string;
-            keepScreenAwake?: boolean;
-            screenBrightness?: number;
-        }
-    >;
-    type PageAttributes = TPageAugmentedAttributes & {
-        [K in keyof TPageAugmentedAttributes as `ios:${K}`]: TPageAugmentedAttributes[K];
-    } & {
-        [K in keyof TPageAugmentedAttributes as `android:${K}`]: TPageAugmentedAttributes[K];
+    interface PageAttributes {
+        'on:sharedElementTo'?: (args) => void;
+        'on:sharedElementFrom'?: (args) => void;
+        navigationBarColor?: string | Color;
+        statusBarColor?: string | Color;
+        screenOrientation?: string;
+        keepScreenAwake?: boolean;
+        screenBrightness?: number;
+    }
+
+    type IntrinsicElementsAugmentedLowercase = {
+        [K in keyof IntrinsicElementsAugmented as Lowercase<K>]: MultiPlatform<IntrinsicElementsAugmented[K]>;
     };
-    type ViewAttributes = TViewAugmentedAttributes & {
-        [K in keyof TViewAugmentedAttributes as `ios:${K}`]: TViewAugmentedAttributes[K];
-    } & {
-        [K in keyof TViewAugmentedAttributes as `android:${K}`]: TViewAugmentedAttributes[K];
-    };
-    type ButtonAttributes = TButtonAugmentedAttributes & {
-        [K in keyof TButtonAugmentedAttributes as `ios:${K}`]: TButtonAugmentedAttributes[K];
-    } & {
-        [K in keyof TButtonAugmentedAttributes as `android:${K}`]: TButtonAugmentedAttributes[K];
-    };
-    type ImageAttributes = TImageAugmentedAttributes & {
-        [K in keyof TImageAugmentedAttributes as `ios:${K}`]: TImageAugmentedAttributes[K];
-    } & {
-        [K in keyof TImageAugmentedAttributes as `android:${K}`]: TImageAugmentedAttributes[K];
-    };
-    type LabelAttributes = TLabelAugmentedAttributes & {
-        [K in keyof TLabelAugmentedAttributes as `ios:${K}`]: TLabelAugmentedAttributes[K];
-    } & {
-        [K in keyof TLabelAugmentedAttributes as `android:${K}`]: TLabelAugmentedAttributes[K];
-    };
+    interface IntrinsicElements extends IntrinsicElementsAugmented, IntrinsicElementsAugmentedLowercase {}
 }
