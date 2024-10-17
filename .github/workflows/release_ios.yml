@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 0
           filter: tree:0
-          submodules: true
+          submodules: recursive
 
       - uses: maxim-lobanov/setup-xcode@v1
 
