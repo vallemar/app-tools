@@ -18,6 +18,11 @@ on:
         default: false
         required: false
         type: string
+      sentry:
+        description: "Should we use sentry?"
+        default: false
+        required: false
+        type: string
 
 jobs:
   release:
@@ -140,4 +145,12 @@ jobs:
 
       - name: publish
         run: |
-          bundle exec fastlane ios alpha publish:${{ inputs.publish }} sentry:true
+          bundle exec fastlane ios alpha publish:${{ inputs.publish }} sentry:${{ inputs.sentry }}
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.APP_ID }}.ios.${{ env.VERSION_STR }}
+          path: |
+            dist/*.ipa
+          retention-days: 7
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`

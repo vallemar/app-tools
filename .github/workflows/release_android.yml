@@ -18,6 +18,11 @@ on:
         default: false
         required: false
         type: string
+      sentry:
+        description: "Should we use sentry?"
+        default: false
+        required: false
+        type: string
 
 jobs:
   release:
@@ -166,19 +171,18 @@ jobs:
           echo $KEYSTORE_BASE64 | base64 -d > $KEYSTORE_PATH
 
       - name: publish beta
-        if: inputs.publish == 'true'
         run: |
-          bundle exec fastlane android beta publish:${{ inputs.publish }} sentry:true
+          bundle exec fastlane android beta publish:${{ inputs.publish }} sentry:${{ inputs.sentry }}
       
       - name: publish github
         run: |
           bundle exec fastlane android github publish:${{ inputs.publish }} sentry:false
       
       - uses: actions/upload-artifact@v4
-        if: inputs.publish !='true'
         with:
-          name: ${{ env.APP_ID }}.${{ env.VERSION_STR }}
+          name: ${{ env.APP_ID }}.android.${{ env.VERSION_STR }}
           path: |
-            **/app-*-release.apk
+            dist/app-arm64-v8a-release.apk
+            dist/app-armeabi-v7a-release.apk
           retention-days: 7
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
