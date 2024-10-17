@@ -29,11 +29,24 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
+          fetch-depth: 0
+          filter: tree:0
           submodules: true
 
       - uses: maxim-lobanov/setup-xcode@v1
+
+      - uses: oleksiyrudenko/gha-git-credentials@v2-latest
+        with:
+          token: '${{ secrets.GITHUB_TOKEN }}'
+          name: Martin Guillon
+          email: dev@akylas.fr
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3' # Not needed with a `.ruby-version` or `.tool-versions`
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -120,14 +133,14 @@ jobs:
       - name: Generate flavor ci file name
         id: define_flavor_ci_string
         run: |
-          echo "FLAVOR_CI_FILENAME=env.ci.${{ inputs.flavor }}" >> $GITHUB_ENV
+          echo "FLAVOR_CI_FILENAME=.env.ci.${{ inputs.flavor }}" >> $GITHUB_ENV
           echo "FLAVOR_CI_MODE=ci.${{ inputs.flavor }}" >> $GITHUB_ENV
 
       - name: Load flavor .env file
         uses: xom9ikk/dotenv@v2.3.0
         if: ${{ hashFiles(env.FLAVOR_CI_FILENAME) != '' }}
         with:
-          mode: $FLAVOR_CI_MODE
+          mode: ${{ env.FLAVOR_CI_MODE }}
           load-mode: strict
       
       - name: update Version
@@ -138,10 +151,19 @@ jobs:
           ./node_modules/.bin/set-version android ${{ inputs.release_type }}
           ./node_modules/.bin/get-version android version | { read version; echo "version=$version" } > $GITHUB_OUTPUT
 
+      - name: update Version
+        id: update_version
+        if: inputs.release_type != 'none'
+        run: |
+          echo "change version to ${{ inputs.release_type }}"
+          npx set-version android ${{ inputs.release_type }}
+          npx get-version android version
+          echo "VERSION_STR=$(npx get-version android version)"  > $GITHUB_ENV
+
       - name: Run shell prepare script
         if: ${{ hashFiles('scripts/ci.prepare.sh') != '' }}
         run: |
-          sh scripts/ci.prepare.sh android ${{ steps.update_version.outputs.version }}
+          sh scripts/ci.prepare.sh --platform android --flavor ${{ inputs.flavor }} --version "${{ env.VERSION_STR }}"
 
       - name: publish
         run: |

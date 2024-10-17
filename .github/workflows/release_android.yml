@@ -143,10 +143,6 @@ jobs:
         with:
           mode: ${{ env.FLAVOR_CI_MODE }}
           load-mode: strict
-  
-      - name: Test
-        run: |
-          ns config --json
 
       - name: update Version
         id: update_version
