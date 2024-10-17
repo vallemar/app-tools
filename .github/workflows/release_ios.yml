@@ -159,7 +159,7 @@ jobs:
 
       - name: publish
         run: |
-          bundle exec fastlane ios alpha create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} --verbose
+          bundle exec fastlane ios alpha create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }}
       
       - uses: actions/upload-artifact@v4
         with:
