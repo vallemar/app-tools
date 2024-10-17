@@ -140,4 +140,4 @@ jobs:
 
       - name: publish
         run: |
-          bundle exec fastlane ios alpha publish:${{ inputs.publish }}
+          bundle exec fastlane ios alpha publish:${{ inputs.publish }} sentry:true
