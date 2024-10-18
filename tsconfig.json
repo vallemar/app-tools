@@ -32,6 +32,6 @@
             "@nativescript/core/*": ["../node_modules/@akylas/nativescript/*"]
         }
     },
-    "include": ["./app/components/**/*.svelte", "./app/**/*.ts", "../app/**/*.svelte", "../typings/*.d.ts"],
+    "include": ["./app/components/**/*.svelte", "./app/**/*.ts", "./app/**/*.svelte", "../app/**/*.ts", "../app/**/*.svelte", "../typings/*.d.ts"],
     "exclude": ["**/node_modules"]
 }
