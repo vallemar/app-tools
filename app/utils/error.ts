@@ -86,11 +86,7 @@ export class CustomError extends BaseError {
     }
 
     get localData() {
-        const res = {};
-        for (const key in this.assignedLocalData) {
-            res[key] = this.assignedLocalData[key];
-        }
-        return res;
+        return JSON.parse(JSON.stringify(this.assignedLocalData));
     }
 
     toJSON() {
@@ -170,10 +166,12 @@ export interface HTTPErrorProps {
 export class NoSpaceLeftError extends CustomError {
     constructor(error: Error) {
         super(
-            Object.assign(error, {
-                error,
-                message: lc('no_space_left')
-            }),
+            Object.assign(
+                { error: { message: error.message, stack: error.stack } },
+                {
+                    message: lc('no_space_left')
+                }
+            ),
             'NoSpaceLeftError'
         );
     }
