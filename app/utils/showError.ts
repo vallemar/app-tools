@@ -1,20 +1,20 @@
-import { AlertOptions } from '@nativescript/core';
-import { wrapNativeException } from '@nativescript/core/utils';
 import { l, lc } from '@nativescript-community/l';
 import { Label } from '@nativescript-community/ui-label';
 import { MDCAlertControlerOptions, alert as mdAlert } from '@nativescript-community/ui-material-dialogs';
-import { get } from 'svelte/store';
-import { colors } from '~/variables';
-import { NoNetworkError, TimeoutError } from '@shared/utils/error';
+import { AlertOptions } from '@nativescript/core';
+import { wrapNativeException } from '@nativescript/core/utils';
+import { CustomError, NoNetworkError, TimeoutError } from '@shared/utils/error';
 import { Sentry, isSentryEnabled } from '@shared/utils/sentry';
 import { createView, showSnack } from '@shared/utils/ui';
+import { get } from 'svelte/store';
+import { colors } from '~/variables';
 
 export async function showError(
     err: Error | string,
     {
-        showAsSnack = false,
-        forcedMessage,
         alertOptions = {},
+        forcedMessage,
+        showAsSnack = false,
         silent = false
     }: { showAsSnack?: boolean; forcedMessage?: string; alertOptions?: AlertOptions & MDCAlertControlerOptions; silent?: boolean } = {}
 ) {
@@ -38,9 +38,20 @@ export async function showError(
         // const showSendBugReport = reporterEnabled && !isString && !(realError instanceof HTTPError) && !!realError.stack;
         const title = realError?.['title'] || lc('error');
 
-        if (realError && reporterEnabled && realError.customErrorConstructorName !== 'PermissionError' && realError.customErrorConstructorName !== 'SilentError') {
+        if (SENTRY_ENABLED && realError && reporterEnabled && realError.customErrorConstructorName !== 'PermissionError' && realError.customErrorConstructorName !== 'SilentError') {
             try {
-                Sentry.captureException(realError);
+                if (realError instanceof CustomError) {
+                    Sentry.withScope((scope) => {
+                        scope.setExtra('errorData', JSON.stringify(realError.extraData));
+                        if (!realError.sentryReportTranslatedName) {
+                            // we dont want translated error messages which makes it hard to debug
+                            realError.message = realError.customErrorConstructorName;
+                        }
+                        Sentry.captureException(realError);
+                    });
+                } else {
+                    Sentry.captureException(realError);
+                }
             } catch (error) {
                 console.error(error, error.stack);
             }

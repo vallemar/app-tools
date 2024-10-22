@@ -21,6 +21,11 @@ export class CustomError extends BaseError {
     assignedLocalData: any;
     silent?: boolean;
     _customStack?: string;
+    sentryReportTranslatedName = false;
+
+    get extraData() {
+        return { errorType: this.customErrorConstructorName, data: this.localData };
+    }
 
     static fromObject(data) {
         switch (data.customErrorConstructorName) {
@@ -80,7 +85,7 @@ export class CustomError extends BaseError {
         this._customStack = value;
     }
 
-    localData() {
+    get localData() {
         const res = {};
         for (const key in this.assignedLocalData) {
             res[key] = this.assignedLocalData[key];
@@ -163,9 +168,10 @@ export interface HTTPErrorProps {
 }
 
 export class NoSpaceLeftError extends CustomError {
-    constructor(props: Error) {
+    constructor(error: Error) {
         super(
-            Object.assign(props, {
+            Object.assign(error, {
+                error,
                 message: lc('no_space_left')
             }),
             'NoSpaceLeftError'
@@ -175,6 +181,7 @@ export class NoSpaceLeftError extends CustomError {
 export class HTTPError extends CustomError {
     statusCode: number;
     requestParams: HTTPSOptions;
+    sentryReportTranslatedName = true;
     constructor(props: HTTPErrorProps | HTTPError) {
         super(
             Object.assign(
