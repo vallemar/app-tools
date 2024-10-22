@@ -4,7 +4,7 @@
     "dependencies": {
         "@dotenvx/dotenvx":"1.19.3",
         "@nativescript-community/fontmin": "0.9.11",
-        "@nativescript-community/set-version": "1.0.4",
+        "@nativescript-community/set-version": "1.0.5",
         "@nativescript/types-android": "8.8.0",
         "@nativescript/types-ios": "8.8.0",
         "@sentry/cli": "2.37.0",
