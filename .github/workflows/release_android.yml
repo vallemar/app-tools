@@ -181,7 +181,7 @@ jobs:
           bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:false
       
       - name: publish github
-        if: inputs.github == true
+        if: inputs.github == 'true'
         run: |
           bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:false github:true
       
