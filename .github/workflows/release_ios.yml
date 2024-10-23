@@ -40,8 +40,13 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
+          actor: farfromrefug
           name: Martin Guillon
           email: dev@akylas.fr
+      
+      - name: Git config
+        run: |
+          git config pull.rebase false
 
       # - uses: ruby/setup-ruby@v1
       #   with:
