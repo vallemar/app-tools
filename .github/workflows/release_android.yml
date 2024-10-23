@@ -15,17 +15,17 @@ on:
         type: string
       publish:
         description: "Should we publish?"
-        default: false
+        default: true
         required: false
         type: string
       github:
         description: "Should we publish on Github?"
         default: true
-        required: true
+        required: false
         type: boolean
       sentry:
         description: "Should we use sentry?"
-        default: false
+        default: true
         required: false
         type: string
 

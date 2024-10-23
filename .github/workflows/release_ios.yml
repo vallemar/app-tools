@@ -15,17 +15,17 @@ on:
         type: string
       publish:
         description: "Should we publish?"
-        default: false
+        default: true
         required: false
         type: string
       github:
         description: "Should we publish on Github?"
         default: true
-        required: true
+        required: false
         type: boolean
       sentry:
         description: "Should we use sentry?"
-        default: false
+        default: true
         required: false
         type: string
 
@@ -54,11 +54,6 @@ jobs:
       - name: Git config
         run: |
           git config pull.rebase false
-
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.3' # Not needed with a `.ruby-version` or `.tool-versions`
-      #     bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: setup node
         uses: actions/setup-node@v4
