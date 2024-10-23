@@ -10,7 +10,7 @@ export function showToast(text: string) {
 export function showToolTip(tooltip: string, view?: View) {
     showSnack({ message: tooltip });
 }
-export function checkIfCaonBackButtonnGoBack(view: View, callback) {
+export function onBackButton(view: View, callback) {
     // Android only for now
     callback();
 }
