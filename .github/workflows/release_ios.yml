@@ -36,6 +36,8 @@ jobs:
           submodules: recursive
 
       - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
