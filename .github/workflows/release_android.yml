@@ -18,6 +18,11 @@ on:
         default: false
         required: false
         type: string
+      github:
+        description: "Should we publish on Github?"
+        default: true
+        required: true
+        type: boolean
       sentry:
         description: "Should we use sentry?"
         default: false
@@ -173,11 +178,12 @@ jobs:
 
       - name: publish beta
         run: |
-          bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }}
+          bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:false
       
       - name: publish github
+        if: inputs.github == true
         run: |
-          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:false
+          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:false github:true
       
       - uses: actions/upload-artifact@v4
         with:
