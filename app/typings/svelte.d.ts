@@ -21,14 +21,9 @@ type MultiPlatform<T> = T & {
 declare namespace svelteNative.JSX {
     type Override<What, With> = Omit<What, keyof With> & With;
 
-    type IntrinsicElementsAugmented = TIntrinsicElements & {
-        mdbutton: ButtonAttributes;
-        cspan: SpanAttributes & CSpanAttributes;
-        canvaslabel: CanvasAttributes & LabelAttributes;
-        canvasview: CanvasAttributes;
-    };
     interface ViewAttributes {
         defaultVisualState?: string;
+        'prop:bottomSheet'?;
         'prop:mainContent'?;
         'prop:leftDrawer'?;
         'prop:rightDrawer'?;
@@ -67,16 +62,6 @@ declare namespace svelteNative.JSX {
     interface SpanAttributes {
         fontWeight?: string | number;
     }
-    interface CSpanAttributes {
-        width?: string | number | LengthDipUnit | LengthPxUnit | LengthPercentUnit;
-        padding?: string | number | LengthDipUnit | LengthPxUnit;
-        paddingBottom?: string | number | LengthDipUnit | LengthPxUnit;
-        paddingLeft?: string | number | LengthDipUnit | LengthPxUnit;
-        paddingRight?: string | number | LengthDipUnit | LengthPxUnit;
-        paddingTop?: string | number | LengthDipUnit | LengthPxUnit;
-        visibility?: VisibilityType;
-        fontWeight?: string | number;
-    }
 
     interface LabelAttributes {
         linkColor?: string;
@@ -104,9 +89,21 @@ declare namespace svelteNative.JSX {
         placeholder?: string;
         placeholderColor?: string | Color;
         'on:returnPress'?: (args) => void;
+        'on:focus'?: (args) => void;
+        'on:blur'?: (args) => void;
+    }
+    interface TextViewAttributes {
+        floating?: boolean | string;
+        variant?: string;
+        placeholder?: string;
+        placeholderColor?: string | Color;
+        'on:returnPress'?: (args) => void;
+        'on:focus'?: (args) => void;
+        'on:blur'?: (args) => void;
     }
     interface TextBaseAttributes {
         verticalTextAlignment?: string;
+        fontWeight?: string | number;
         text?: string | number;
     }
     interface SpanAttributes {
@@ -133,6 +130,15 @@ declare namespace svelteNative.JSX {
         keepScreenAwake?: boolean;
         screenBrightness?: number;
     }
+    interface CSpanAttributes extends TextBaseAttributes, SpanAttributes {}
+    interface CanvasLabelAttributes extends CanvasAttributes, LabelAttributes {}
+
+    type IntrinsicElementsAugmented = TIntrinsicElements & {
+        mdbutton: ButtonAttributes;
+        cspan: CSpanAttributes;
+        canvaslabel: CanvasLabelAttributes;
+        canvasview: CanvasAttributes;
+    };
 
     type IntrinsicElementsAugmentedLowercase = Override<
         IntrinsicElementsAugmented,
