@@ -1,4 +1,13 @@
+/* eslint-disable @typescript-eslint/no-empty-object-type */
 type Color = import('@nativescript/core').Color;
+type EventData = import('@nativescript/core').EventData;
+type LengthDipUnit = import('@nativescript/core/core-types').LengthDipUnit;
+type LengthPxUnit = import('@nativescript/core/core-types').LengthPxUnit;
+type LengthPercentUnit = import('@nativescript/core/core-types').LengthPercentUnit;
+type VisibilityType = import('@nativescript/core/core-types').CoreTypes.VisibilityType;
+type ShownModallyData = import('@nativescript/core').ShownModallyData;
+type CanvasView = import('@nativescript-community/ui-canvas').CanvasView;
+type Canvas = import('@nativescript-community/ui-canvas').Canvas;
 
 declare module 'svelte/internal' {
     export function get_current_component();
@@ -12,16 +21,9 @@ type MultiPlatform<T> = T & {
 declare namespace svelteNative.JSX {
     type Override<What, With> = Omit<What, keyof With> & With;
 
-    type IntrinsicElementsAugmented = Override<
-        TIntrinsicElements,
-        {
-            mdbutton: ButtonAttributes;
-        } & {
-            [K in keyof TIntrinsicElements]: MultiPlatform<TIntrinsicElements[K]>;
-        }
-    >;
     interface ViewAttributes {
         defaultVisualState?: string;
+        'prop:bottomSheet'?;
         'prop:mainContent'?;
         'prop:leftDrawer'?;
         'prop:rightDrawer'?;
@@ -53,6 +55,14 @@ declare namespace svelteNative.JSX {
         contextOptions?: any;
         'on:rotateAnimated'?: (args: EventData) => void;
     }
+
+    interface CanvasAttributes extends GridLayoutAttributes {
+        'on:draw'?: (args: { canvas: Canvas; object: CanvasView }) => void;
+    }
+    interface SpanAttributes {
+        fontWeight?: string | number;
+    }
+
     interface LabelAttributes {
         linkColor?: string;
         autoFontSize?: boolean;
@@ -66,15 +76,34 @@ declare namespace svelteNative.JSX {
         onlinkTap?;
         'on:linkTap'?;
     }
+    interface WebViewAttributes {
+        builtInZoomControls?: boolean;
+        debugMode?: boolean;
+        displayZoomControls?: boolean;
+        normalizeUrls?: boolean;
+        webConsoleEnabled?: boolean;
+    }
     interface TextFieldAttributes {
         floating?: boolean | string;
         variant?: string;
         placeholder?: string;
         placeholderColor?: string | Color;
         'on:returnPress'?: (args) => void;
+        'on:focus'?: (args) => void;
+        'on:blur'?: (args) => void;
+    }
+    interface TextViewAttributes {
+        floating?: boolean | string;
+        variant?: string;
+        placeholder?: string;
+        placeholderColor?: string | Color;
+        'on:returnPress'?: (args) => void;
+        'on:focus'?: (args) => void;
+        'on:blur'?: (args) => void;
     }
     interface TextBaseAttributes {
         verticalTextAlignment?: string;
+        fontWeight?: string | number;
         text?: string | number;
     }
     interface SpanAttributes {
@@ -101,9 +130,23 @@ declare namespace svelteNative.JSX {
         keepScreenAwake?: boolean;
         screenBrightness?: number;
     }
+    interface CSpanAttributes extends TextBaseAttributes, SpanAttributes {}
+    interface CanvasLabelAttributes extends CanvasAttributes, LabelAttributes {}
 
-    type IntrinsicElementsAugmentedLowercase = {
+    type IntrinsicElementsAugmented = TIntrinsicElements & {
+        mdbutton: ButtonAttributes;
+        cspan: CSpanAttributes;
+        canvaslabel: CanvasLabelAttributes;
+        canvasview: CanvasAttributes;
+    };
+
+    type IntrinsicElementsAugmentedLowercase = Override<
+        IntrinsicElementsAugmented,
+        {
+            [K in keyof IntrinsicElementsAugmented]: MultiPlatform<IntrinsicElementsAugmented[K]>;
+        }
+    > & {
         [K in keyof IntrinsicElementsAugmented as Lowercase<K>]: MultiPlatform<IntrinsicElementsAugmented[K]>;
     };
-    interface IntrinsicElements extends IntrinsicElementsAugmented, IntrinsicElementsAugmentedLowercase {}
+    interface IntrinsicElements extends IntrinsicElementsAugmentedLowercase {}
 }

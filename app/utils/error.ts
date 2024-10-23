@@ -176,6 +176,12 @@ export class NoSpaceLeftError extends CustomError {
         );
     }
 }
+export interface HTTPErrorProps {
+    statusCode: number;
+    responseHeaders?: Headers;
+    message: string;
+    requestParams: HTTPSOptions;
+}
 export class HTTPError extends CustomError {
     statusCode: number;
     requestParams: HTTPSOptions;
