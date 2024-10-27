@@ -15,12 +15,17 @@ on:
         type: string
       publish:
         description: "Should we publish?"
-        default: false
+        default: 'true'
+        required: false
+        type: string
+      github:
+        description: "Should we publish on Github?"
+        default: 'true'
         required: false
         type: string
       sentry:
         description: "Should we use sentry?"
-        default: false
+        default: 'true'
         required: false
         type: string
 
@@ -36,6 +41,8 @@ jobs:
           submodules: recursive
 
       - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
@@ -47,11 +54,6 @@ jobs:
       - name: Git config
         run: |
           git config pull.rebase false
-
-      # - uses: ruby/setup-ruby@v1
-      #   with:
-      #     ruby-version: '3.3' # Not needed with a `.ruby-version` or `.tool-versions`
-      #     bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - name: setup node
         uses: actions/setup-node@v4
@@ -164,7 +166,7 @@ jobs:
 
       - name: publish
         run: |
-          bundle exec fastlane ios alpha create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} --verbose
+          bundle exec fastlane ios alpha create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:${{ inputs.github }}
       
       - uses: actions/upload-artifact@v4
         with:

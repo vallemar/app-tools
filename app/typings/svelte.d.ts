@@ -53,7 +53,7 @@ declare namespace svelteNative.JSX {
         blurRadius?: number;
         fadeDuration?: number;
         contextOptions?: any;
-        'on:rotateAnimated'?: (args: EventData) => void;
+        'on:rotateAnimated'?: (args) => void;
     }
 
     interface CanvasAttributes extends GridLayoutAttributes {
