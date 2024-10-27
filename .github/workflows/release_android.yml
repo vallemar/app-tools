@@ -161,7 +161,7 @@ jobs:
       - name: Run shell prepare script
         if: ${{ hashFiles('scripts/ci.prepare.sh') != '' }}
         run: |
-          sh scripts/ci.prepare.sh --platform android --flavor ${{ inputs.flavor }} --version "${{ env.VERSION_STR }}"
+          sh scripts/ci.prepare.sh --platform android --flavor "${{ inputs.flavor }}" --version "${{ env.VERSION_STR }}"
 
       - name: Decode Keystore
         env:
