@@ -134,6 +134,7 @@ declare namespace svelteNative.JSX {
     interface CanvasLabelAttributes extends CanvasAttributes, LabelAttributes {}
 
     type IntrinsicElementsAugmented = TIntrinsicElements & {
+        gesturerootview: GridLayoutAttributes;
         mdbutton: ButtonAttributes;
         cspan: CSpanAttributes;
         canvaslabel: CanvasLabelAttributes;
