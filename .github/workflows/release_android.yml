@@ -166,7 +166,7 @@ jobs:
       - name: Run shell prepare script
         if: ${{ hashFiles('scripts/ci.prepare.sh') != '' }}
         run: |
-          sh scripts/ci.prepare.sh --platform android --flavor ${{ inputs.flavor }} --version "${{ env.VERSION_STR }}"
+          sh scripts/ci.prepare.sh --platform android --flavor "${{ inputs.flavor }}" --version "${{ env.VERSION_STR }}"
 
       - name: Decode Keystore
         env:
@@ -177,6 +177,7 @@ jobs:
           echo $KEYSTORE_BASE64 | base64 -d > $KEYSTORE_PATH
 
       - name: publish beta
+        if: inputs.publish == 'true'
         run: |
           bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:false
       
