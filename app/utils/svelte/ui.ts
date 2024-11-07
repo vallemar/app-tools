@@ -1,10 +1,10 @@
 import { EventData, Frame, Observable, View } from '@nativescript/core';
+import { throttle } from '@nativescript/core/utils';
 import { onDestroy } from 'svelte';
-import { asSvelteTransition, easings } from 'svelte-native/transitions';
-import { get_current_component } from 'svelte/internal';
 import { closeModal as sCloseModal, goBack as sGoBack, navigate as sNavigate, showModal as sShowModal } from 'svelte-native';
 import { BackNavigationOptions, NavigationOptions, ShowModalOptions } from 'svelte-native/dom';
-import { throttle } from '@nativescript/core/utils';
+import { asSvelteTransition, easings } from 'svelte-native/transitions';
+import { get_current_component } from 'svelte/internal';
 
 export const globalObservable = new Observable();
 
