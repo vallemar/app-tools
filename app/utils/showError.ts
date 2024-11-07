@@ -29,7 +29,7 @@ export async function showError(
 
         const isString = realError === null || realError === undefined;
         let message = isString ? (err as string) : realError.message || realError.toString();
-        DEV_LOG && console.error('showError', reporterEnabled, message, realError?.['stack'], realError?.['stackTrace'], realError?.['nativeException']);
+        DEV_LOG && console.error('showError', message, realError?.assignedLocalData, realError?.['stack'], realError?.['stackTrace'], realError?.['nativeException']);
         message = forcedMessage || message;
         if (showAsSnack || realError.customErrorConstructorName === 'NoNetworkError' || realError.customErrorConstructorName === 'TimeoutError') {
             showSnack({ message });
