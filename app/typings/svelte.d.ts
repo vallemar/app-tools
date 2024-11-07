@@ -36,6 +36,7 @@ declare namespace svelteNative.JSX {
         dynamicElevationOffset?: string | number;
         elevation?: string | number;
         'on:closingModally'?: (args: ShownModallyData) => void;
+        'on:closedBottomSheet'?: (args) => void;
         // "on:shownModally"?: (args: ShownModallyData) => void;
     }
 
