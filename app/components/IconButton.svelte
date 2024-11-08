@@ -39,9 +39,9 @@
     $: actualLongPress =
         onLongPress || tooltip
             ? (event) => {
-                  if (event.ios && event.ios.state !== 3) {
-                      return;
-                  }
+                //   if (event.ios && event.ios.state !== 3) {
+                //       return;
+                //   }
                   if (onLongPress) {
                       onLongPress(event);
                   } else {
