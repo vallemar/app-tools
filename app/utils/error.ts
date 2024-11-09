@@ -202,6 +202,7 @@ export class HTTPError extends CustomError {
 export function wrapNativeHttpException(error, requestParams: HttpsRequestOptions) {
     return wrapNativeException(error, (message) => {
         if (
+            /(cancelled)/.test(message) ||
             (__ANDROID__ && /(SocketTimeout|ConnectException|SocketException|SSLException|UnknownHost)/.test(message)) ||
             (__IOS__ && /(request timed out|unable to complete your request|ConnectException|connection was lost)/.test(message))
         ) {
