@@ -1,6 +1,7 @@
 import { createHash } from 'crypto';
 import { copyFileSync, existsSync, lstatSync, mkdir, mkdirSync, readFileSync, readdirSync, writeFileSync } from 'fs';
-import { config, set as dotEnvSet } from '@dotenvx/dotenvx';
+import pkg from '@dotenvx/dotenvx';
+const { config, set: dotEnvSet } = pkg;
 import { exec, execSync } from 'child_process';
 
 const pluginPackageJSON = JSON.parse(readFileSync('./package.json'));
