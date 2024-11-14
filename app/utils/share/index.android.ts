@@ -13,24 +13,20 @@ export async function share(content: Content, options: Options = {}) {
         throw new Error('missing_content');
     }
     const Intent = android.content.Intent;
+    DEV_LOG && console.log('share', content, options);
+
+    let mimetype = options.mimetype;
 
     const intent = new Intent(ACTION_SEND);
-    intent.setTypeAndNormalize(options.mimetype || 'text/plain');
 
-    if (content.title) {
-        intent.putExtra(Intent.EXTRA_SUBJECT, content.title);
-    }
-
-    if (content.message) {
-        intent.putExtra(Intent.EXTRA_TEXT, content.message);
-    }
     const currentActivity: android.app.Activity = Application.android.foregroundActivity || Application.android.startActivity;
+    const context = Utils.android.getApplicationContext();
 
     const uris = [];
 
     async function addImage(image) {
-        if (!options.mimetype) {
-            intent.setTypeAndNormalize('image/jpeg');
+        if (!mimetype) {
+            mimetype = 'image/jpeg';
         }
         const imageFileName = 'share_image_' + numberOfImagesCreated++ + '.jpg';
         const filePath = path.join(knownFolders.temp().path, imageFileName);
@@ -53,6 +49,16 @@ export async function share(content: Content, options: Options = {}) {
         } else {
             shareableFileUri = android.net.Uri.fromFile(newFile);
         }
+        if (!mimetype) {
+            // try to guess the file mimetype
+            const type = android.webkit.MimeTypeMap.getSingleton().getExtensionFromMimeType(context.getContentResolver().getType(shareableFileUri));
+            if (type) {
+                const guessedMimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(type);
+                if (guessedMimetype) {
+                    mimetype = guessedMimetype;
+                }
+            }
+        }
         uris.push(shareableFileUri);
     }
 
@@ -72,6 +78,20 @@ export async function share(content: Content, options: Options = {}) {
             addFile(content.files[index]);
         }
     }
+
+    if (content.title) {
+        if (!mimetype) {
+            mimetype = 'text/plain';
+        }
+        intent.putExtra(Intent.EXTRA_SUBJECT, content.title);
+    }
+
+    if (content.message) {
+        if (!mimetype) {
+            mimetype = 'text/plain';
+        }
+        intent.putExtra(Intent.EXTRA_TEXT, content.message);
+    }
     if (uris.length === 1) {
         intent.putExtra(EXTRA_STREAM, uris[0]);
     } else if (uris.length > 1) {
@@ -80,6 +100,7 @@ export async function share(content: Content, options: Options = {}) {
         intent.setAction(ACTION_SEND_MULTIPLE);
         intent.putExtra(EXTRA_STREAM, arrayList);
     }
+    intent.setTypeAndNormalize(mimetype || '*/*');
 
     const chooser = Intent.createChooser(intent, options.dialogTitle);
     chooser.addCategory(Intent.CATEGORY_DEFAULT);
