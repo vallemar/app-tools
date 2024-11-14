@@ -82,13 +82,6 @@ jobs:
           ndk-version: r27c
           local-cache: true
 
-      - name: Install NativeScript
-        run: |
-          python3 -m pip install --upgrade pip six
-          npm i -g @akylas/nativescript-cli --ignore-scripts --legacy-peer-deps
-          ns usage-reporting disable
-          ns error-reporting disable
-      
       - name: install jq
         run: sudo apt-get install jq
       
@@ -96,6 +89,14 @@ jobs:
         run: |
           corepack enable 
           yarn config get globalFolder # the yarn command will ensure the correct yarn version is downloaded and installed
+
+      - name: Install NativeScript
+        run: |
+          python3 -m pip install --upgrade pip six
+          npm i -g @akylas/nativescript-cli --ignore-scripts --legacy-peer-deps
+          ns package-manager set yarn2
+          ns usage-reporting disable
+          ns error-reporting disable
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
