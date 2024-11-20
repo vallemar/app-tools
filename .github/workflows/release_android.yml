@@ -118,7 +118,6 @@ jobs:
             ${{ runner.os }}-node_modules-
 
       - name: Install deps
-        if: steps.node_modules.outputs.cache-hit != 'true'
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
