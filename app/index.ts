@@ -1,5 +1,5 @@
 import { GestureRootView } from '@nativescript-community/gesturehandler';
-import { Frame, NavigatedData, Page } from '@nativescript/core';
+import { Frame, type NavigatedData, Page } from '@nativescript/core';
 
 export function init() {
     if (!PRODUCTION && DEV_LOG) {
