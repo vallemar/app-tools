@@ -195,7 +195,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: inputs.publish == 'false' && inputs.fakepublish == 'true'
         with:
-          name: ${{ env.APP_ID }}.android.${{ env.VERSION_STR }}
+          name: ${{ env.APP_ID }}.android.aab.${{ env.VERSION_STR }}
           path: |
             dist/*.aab
           retention-days: 7
