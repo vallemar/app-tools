@@ -2,7 +2,8 @@ function chunk<T>(array: T[], size) {
     return Array.from<T, T[]>({ length: Math.ceil(array.length / size) }, (value, index) => array.slice(index * size, index * size + size));
 }
 
-export async function doInBatch<T, U>(array: T[], handler: (T, index: number) => Promise<U>, chunkSize: number = 5) {
+export type BatchHander<T, U> = (T, index: number) => Promise<U>;
+export async function doInBatch<T, U = any>(array: T[], handler: BatchHander<T, U>, chunkSize: number = 5) {
     const chunks = chunk(array, chunkSize);
     const result: U[] = [];
     // we use allSettled to wait for all even if one failed
