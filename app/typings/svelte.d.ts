@@ -122,6 +122,9 @@ declare namespace svelteNative.JSX {
     interface ProgressAttributes {
         padding?: number | string;
     }
+    interface WebViewAttributes {
+        'on:shouldOverrideUrlLoading'?: (args) => void;
+    }
     interface PageAttributes {
         'on:sharedElementTo'?: (args) => void;
         'on:sharedElementFrom'?: (args) => void;
