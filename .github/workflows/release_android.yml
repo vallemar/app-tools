@@ -18,6 +18,11 @@ on:
         default: 'true'
         required: false
         type: string
+      fakepublish:
+        description: "build publish even if not publishing?"
+        default: 'true'
+        required: false
+        type: string
       github:
         description: "Should we publish on Github?"
         default: 'true'
@@ -171,7 +176,7 @@ jobs:
           echo $KEYSTORE_BASE64 | base64 -d > $KEYSTORE_PATH
 
       - name: publish beta
-        if: inputs.publish == 'true'
+        if: inputs.publish == 'true' || inputs.fakepublish == 'true'
         run: |
           bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:false
       
@@ -183,7 +188,15 @@ jobs:
         with:
           name: ${{ env.APP_ID }}.android.${{ env.VERSION_STR }}
           path: |
-            dist/app-arm64-v8a-release.apk
-            dist/app-armeabi-v7a-release.apk
+            dist/*.apk
+          retention-days: 7
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.publish == 'false' && inputs.fakepublish == 'true'
+        with:
+          name: ${{ env.APP_ID }}.android.${{ env.VERSION_STR }}
+          path: |
+            dist/*.aab
           retention-days: 7
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
