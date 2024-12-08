@@ -48,7 +48,7 @@
         "svelte-check": "^4.1.1",
         "svelte-loader": "3.2.4",
         "svelte-native-preprocessor": "~1.0.0",
-        "svelte-preprocess": "5.1.4",
+        "svelte-preprocess": "6.0.3",
         "terser-webpack-plugin": "^5.3.10",
         "ts-loader": "9.5.1",
         "ts-patch": "^3.3.0",
