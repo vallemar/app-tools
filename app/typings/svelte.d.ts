@@ -114,6 +114,7 @@ declare namespace svelteNative.JSX {
         builtInZoomControls?: boolean;
         debugMode?: boolean;
         displayZoomControls?: boolean;
+        nestedScrollView?: boolean;
         normalizeUrls?: boolean;
         webConsoleEnabled?: boolean;
     }
