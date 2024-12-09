@@ -157,6 +157,7 @@ declare namespace svelteNative.JSX {
         padding?: number | string;
     }
     interface WebViewAttributes {
+        domStorage?: boolean;
         userAgent?: string;
         'on:shouldOverrideUrlLoading'?: (args) => void;
         'on:loadFinished'?: (args) => void;
