@@ -8,6 +8,12 @@ type VisibilityType = import('@nativescript/core/core-types').CoreTypes.Visibili
 type ShownModallyData = import('@nativescript/core').ShownModallyData;
 type CanvasView = import('@nativescript-community/ui-canvas').CanvasView;
 type Canvas = import('@nativescript-community/ui-canvas').Canvas;
+type Paint = import('@nativescript-community/ui-canvas').Paint;
+type PanGestureHandlerOptions = import('@nativescript-community/gesturehandler').PanGestureHandlerOptions;
+type PinchGestureHandlerOptions = import('@nativescript-community/gesturehandler').PinchGestureHandlerOptions;
+type RotationGestureHandlerOptions = import('@nativescript-community/gesturehandler').RotationGestureHandlerOptions;
+type TapGestureHandlerOptions = import('@nativescript-community/gesturehandler').TapGestureHandlerOptions;
+type HighlightEventData = import('@nativescript-community/ui-chart/charts/Chart').HighlightEventData;
 
 declare module 'svelte/internal' {
     export function get_current_component();
@@ -58,7 +64,34 @@ declare namespace svelteNative.JSX {
     }
 
     interface CanvasAttributes extends GridLayoutAttributes {
+        hardwareAccelerated?: boolean;
         'on:draw'?: (args: { canvas: Canvas; object: CanvasView }) => void;
+    }
+    interface LineChartAttributes extends CanvasAttributes {
+        'on:highlight'?: (args: HighlightEventData) => void;
+        'on:zoom'?: (args) => void;
+        'on:pan'?: (args) => void;
+        dragDecelerationEnabled?: boolean;
+        drawMarkersEnabled?: boolean;
+        highlightsFilterByAxis?: boolean;
+        disableScrollEnabled?: boolean;
+        noDataText?: string;
+        descPaint?: Paint;
+        panGestureOptions?: PanGestureHandlerOptions & {
+            gestureTag?: number;
+        };
+        tapGestureOptions?: TapGestureHandlerOptions & {
+            gestureTag?: number;
+        };
+        doubleTapGestureOptions?: TapGestureHandlerOptions & {
+            gestureTag?: number;
+        };
+        pinchGestureOptions?: PinchGestureHandlerOptions & {
+            gestureTag?: number;
+        };
+        rotationGestureOptions?: RotationGestureHandlerOptions & {
+            gestureTag?: number;
+        };
     }
     interface SpanAttributes {
         fontWeight?: string | number;
@@ -143,6 +176,7 @@ declare namespace svelteNative.JSX {
         cspan: CSpanAttributes;
         canvaslabel: CanvasLabelAttributes;
         canvasview: CanvasAttributes;
+        linechart: LineChartAttributes;
     };
 
     type IntrinsicElementsAugmentedLowercase = Override<
