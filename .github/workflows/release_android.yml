@@ -18,6 +18,11 @@ on:
         default: 'true'
         required: false
         type: string
+      fakepublish:
+        description: "build publish even if not publishing?"
+        default: 'true'
+        required: false
+        type: string
       github:
         description: "Should we publish on Github?"
         default: 'true'
@@ -105,29 +110,22 @@ jobs:
       - name: Remove package.json resolutions
         run: echo "`jq 'delpaths([["resolutions"]])' package.json`" > package.json
 
+      # - name: Remove yarn.lock to ensure we dont rely on it
+      #   run: rm yarn.lock
+
       - uses: actions/cache@v4
         name: Handle node_modules Cache
-        id: yarn-node_modules # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        id: node_modules # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
         with:
           path: node_modules
-          key: ${{ runner.os }}-yarn-node_modules-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}node_modules-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-node_modules-
 
-      - uses: actions/cache@v4
-        if: steps.yarn-node_modules.outputs.cache-hit != 'true'
-        name: Handle Yarn cache
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Install deps
-        if: steps.yarn-node_modules.outputs.cache-hit != 'true'
         uses: bahmutov/npm-install@v1
         with:
+          useLockFile: false
           install-command: yarn install --silent
         env: 
           YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -178,20 +176,27 @@ jobs:
           echo $KEYSTORE_BASE64 | base64 -d > $KEYSTORE_PATH
 
       - name: publish beta
-        if: inputs.publish == 'true'
+        if: inputs.publish == 'true' || inputs.fakepublish == 'true'
         run: |
           bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:false
       
       - name: publish github
-        if: inputs.github == 'true'
         run: |
-          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:false github:true
+          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:false github:${{ inputs.github }}
       
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_ID }}.android.${{ env.VERSION_STR }}
           path: |
-            dist/app-arm64-v8a-release.apk
-            dist/app-armeabi-v7a-release.apk
+            dist/*.apk
+          retention-days: 7
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
+
+      - uses: actions/upload-artifact@v4
+        if: inputs.publish == 'false' && inputs.fakepublish == 'true'
+        with:
+          name: ${{ env.APP_ID }}.android.aab.${{ env.VERSION_STR }}
+          path: |
+            dist/*.aab
           retention-days: 7
           if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn`
