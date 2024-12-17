@@ -27,6 +27,9 @@ export default class NSQLDatabase implements DatabaseInterface {
     async disconnect(): Promise<void> {
         return this.db.close();
     }
+    isOpen(): boolean {
+        return this.db.isOpen;
+    }
 
     indexToPlaceholder(i: number): string {
         return '?';
