@@ -167,7 +167,7 @@ export class NoSpaceLeftError extends CustomError {
     constructor(error: Error) {
         super(
             Object.assign(
-                { error: { message: error.message, stack: error.stack } },
+                { error: { message: error.message, stack: error.stack }, stack: error.stack },
                 {
                     message: lc('no_space_left')
                 }
