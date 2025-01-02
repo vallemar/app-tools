@@ -16,7 +16,7 @@ export async function startSentry() {
                 appPrefix: '~/',
                 // appPrefix: SENTRY_PREFIX,
                 release: `${__APP_ID__}@${__APP_VERSION__}+${__APP_BUILD_NUMBER__}`,
-                dist: `${__APP_BUILD_NUMBER__}.${__ANDROID__ ? 'android' : 'ios'}`,
+                dist: `${__APP_BUILD_NUMBER__}.${__ANDROID__ ? 'android' : 'ios'}${__ANDROID__ ? (PLAY_STORE_BUILD ? '.playstore' : '.fdroid') : ''}`,
                 colnoOffset: 4,
                 disabledNativeIntegrations: ['io.sentry.UncaughtExceptionHandlerIntegration', 'io.sentry.android.fragment.FragmentLifecycleIntegration'], // Android
                 flushSendEvent: true,
