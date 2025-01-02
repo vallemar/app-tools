@@ -33,6 +33,11 @@ on:
         default: 'true'
         required: false
         type: string
+      sentry_fdroid:
+        description: "Should we use sentry with fdroid build?"
+        default: 'false'
+        required: false
+        type: string
 
 jobs:
   release:
@@ -182,7 +187,7 @@ jobs:
       
       - name: publish github
         run: |
-          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:false github:${{ inputs.github }}
+          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry_fdroid }} github:${{ inputs.github }}
       
       - uses: actions/upload-artifact@v4
         with:
