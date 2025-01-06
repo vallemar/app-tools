@@ -93,9 +93,12 @@ export async function presentInAppSponsorBottomsheet() {
         parent: null,
         view: OptionSelect,
         peekHeight: 400,
+
         ignoreTopSafeArea: true,
         props: {
+            fontWeight: 'normal',
             autoSizeListItem: true,
+            showBorders: true,
             options,
             rowHeight,
             height
