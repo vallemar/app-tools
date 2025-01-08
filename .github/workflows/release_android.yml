@@ -14,7 +14,7 @@ on:
         required: false
         type: string
       publish:
-        description: "Should we publish?"
+        description: "Should we publish on the Playstore?"
         default: 'true'
         required: false
         type: string
@@ -186,10 +186,12 @@ jobs:
           bundle exec fastlane android beta create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:false
       
       - name: publish github
+        if: inputs.github == 'true' || inputs.fakepublish == 'true'
         run: |
-          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry_fdroid }} github:${{ inputs.github }}
+          bundle exec fastlane android github create_tag:${{ inputs.publish }} publish:${{ inputs.github }} sentry:${{ inputs.sentry_fdroid }} github:${{ inputs.github }}
       
       - uses: actions/upload-artifact@v4
+        if: inputs.github == 'true' || inputs.fakepublish == 'true'
         with:
           name: ${{ env.APP_ID }}.android.${{ env.VERSION_STR }}
           path: |
