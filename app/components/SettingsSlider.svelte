@@ -1,7 +1,4 @@
-<script context="module" lang="ts">
-    import PopoverBackgroundView from '~/components/common/PopoverBackgroundView.svelte';
-</script>
-
+<svelte:options accessors />
 <script lang="ts">
     export let icon: string = null;
     export let title: string = null;
@@ -13,8 +10,8 @@
     export let formatter = null;
 
     function onValueChange(event) {
+        value = event.value;
         if (onChange) {
-            value = event.value;
             onChange(event.value);
         }
     }
