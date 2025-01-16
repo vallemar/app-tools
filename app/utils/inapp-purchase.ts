@@ -48,7 +48,7 @@ export function init() {
                     break;
                 case PaymentEvent.Context.FINALIZING_ORDER:
                     if (event.result === PaymentEvent.Result.SUCCESS) {
-                        showThankYou();
+                        showThankYou().catch(showError);
                     } else if (event.result === PaymentEvent.Result.FAILURE) {
                         showError(new Error(lc('in_app_failure', (event as PaymentEvent.FinalizingOrder.IFailure).payload.description)));
                     }
