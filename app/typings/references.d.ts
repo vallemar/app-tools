@@ -9,7 +9,7 @@
 
 declare const __APP_ID__: string;
 declare const __APP_VERSION__: string;
-declare const __APP_BUILD_NUMBER__: string;
+declare const __APP_BUILD_NUMBER__: number;
 
 declare const __INAPP_PURCHASE_ID_PREFIX__: string;
 
