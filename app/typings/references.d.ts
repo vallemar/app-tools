@@ -5,7 +5,7 @@
 /// <reference path="../../../node_modules/@nativescript/types-ios/lib/ios/objc-x86_64/objc!UIKit.d.ts" />
 /// <reference path="../../../node_modules/@nativescript/types-android/lib/android-34.d.ts" />
 /// <reference path="../../../node_modules/@nativescript/core/global-types.d.ts" />
-/// <reference path="../node_modules/@nativescript/types-ios/lib/ios/interop.d.ts" />
+/// <reference path="../../../node_modules/@nativescript/types-ios/lib/ios/interop.d.ts" />
 
 declare const __APP_ID__: string;
 declare const __APP_VERSION__: string;
