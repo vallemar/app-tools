@@ -8,6 +8,7 @@ export let inappItems: InAppItem[];
 export function init() {
     if (!inappPurchase) {
         inappPurchase = new InAppPurchase();
+        const itemPrefix = __INAPP_PURCHASE_ID_PREFIX__ + __APP_ID__ + '.';
         inappPurchase.on(PaymentEvent.EventName, (event: PaymentEvent.IEvent) => {
             switch (event.context) {
                 case PaymentEvent.Context.CONNECTING_STORE:
@@ -16,7 +17,7 @@ export function init() {
                         const canPay = inappPurchase.canMakePayments();
                         if (canPay) {
                             // pass in your product IDs here that you want to query for
-                            inappPurchase.fetchItems([__APP_ID__ + '.smalltip', __APP_ID__ + '.mediumtip', __APP_ID__ + '.largetip', __APP_ID__ + '.largertip', __APP_ID__ + '.bigtip']);
+                            inappPurchase.fetchItems([itemPrefix + 'smalltip', itemPrefix + 'mediumtip', itemPrefix + 'largetip', itemPrefix + 'largertip', itemPrefix + 'bigtip']);
                         }
                     } else if (event.result === PaymentEvent.Result.FAILURE) {
                         DEV_LOG && console.log('in_app_failure', (event as PaymentEvent.ConnectingStore.IFailure).payload.description);
