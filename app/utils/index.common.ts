@@ -51,21 +51,23 @@ export function setCustomCssRootClass(className, oldClassName?) {
         removeCssClass(rootView, oldClassName);
     }
 }
-export async function tryCatch(callback, finallyCb?) {
+export async function tryCatch(callback, onErrorCb?, finallyCb?) {
     try {
         await callback();
     } catch (error) {
         showError(error);
+        onErrorCb?.();
     } finally {
         finallyCb?.();
     }
 }
-export function tryCatchFunction(callback, finallyCb?) {
+export function tryCatchFunction(callback, onErrorCb?, finallyCb?) {
     return async (...args) => {
         try {
             await callback(...args);
         } catch (error) {
             showError(error);
+            onErrorCb?.();
         } finally {
             finallyCb?.();
         }
