@@ -1,4 +1,6 @@
 import { Application, CSSUtils } from '@nativescript/core';
+import { callbackify } from 'util';
+import { showError } from './showError';
 
 export function groupBy<T>(items: readonly T[], keyGetter: (item: T) => string) {
     const result = {};
@@ -48,4 +50,24 @@ export function setCustomCssRootClass(className, oldClassName?) {
     if (oldClassName) {
         removeCssClass(rootView, oldClassName);
     }
+}
+export async function tryCatch(callback, finallyCb?) {
+    try {
+        await callback();
+    } catch (error) {
+        showError(error);
+    } finally {
+        finallyCb?.();
+    }
+}
+export function tryCatchFunction(callback, finallyCb?) {
+    return async (...args) => {
+        try {
+            await callback(...args);
+        } catch (error) {
+            showError(error);
+        } finally {
+            finallyCb?.();
+        }
+    };
 }
