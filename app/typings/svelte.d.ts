@@ -100,6 +100,7 @@ declare namespace svelteNative.JSX {
     interface LabelAttributes {
         linkColor?: string;
         autoFontSize?: boolean;
+        autoFontSizeStep?: number;
         maxLines?: number;
         minFontSize?: number;
         maxFontSize?: number;
