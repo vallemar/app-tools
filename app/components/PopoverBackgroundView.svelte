@@ -10,7 +10,7 @@
 </script>
 
 <gesturerootview columns="auto" rows="auto">
-    <gridlayout {backgroundColor} borderRadius={10} elevation={4} margin={4} padding="0 10 0 10" {...$$restProps}>
+    <gridlayout {backgroundColor} borderRadius={10} elevation={__IOS__ ? 0 : 4} margin={4} padding="0 10 0 10" {...$$restProps}>
         <slot />
     </gridlayout>
 </gesturerootview>
