@@ -144,9 +144,9 @@ jobs:
         if: inputs.release_type != 'none'
         run: |
           echo "change version to ${{ inputs.release_type }}"
-          npx set-version ios ${{ inputs.release_type }}
-          npx get-version ios version
-          echo "VERSION_STR=$(npx get-version ios version)"  > $GITHUB_ENV
+          npx set-version ios ${{ inputs.release_type }} ./apps/fly-app/nativescript.config.ts
+          npx get-version ios version ./apps/fly-app/nativescript.config.ts
+          echo "VERSION_STR=$(npx get-version ios version ./apps/fly-app/nativescript.config.ts)"  > $GITHUB_ENV
 
       - name: Run shell prepare script
         if: ${{ hashFiles('scripts/ci.prepare.sh') != '' }}
