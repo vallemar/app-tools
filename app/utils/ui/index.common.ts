@@ -153,3 +153,25 @@ export async function hideLoading() {
         loadingIndicator.hide();
     }
 }
+export async function tryCatch(callback, onErrorCb?, finallyCb?) {
+    try {
+        await callback();
+    } catch (error) {
+        showError(error);
+        onErrorCb?.();
+    } finally {
+        finallyCb?.();
+    }
+}
+export function tryCatchFunction(callback, onErrorCb?, finallyCb?) {
+    return async (...args) => {
+        try {
+            await callback(...args);
+        } catch (error) {
+            showError(error);
+            onErrorCb?.();
+        } finally {
+            finallyCb?.();
+        }
+    };
+}
