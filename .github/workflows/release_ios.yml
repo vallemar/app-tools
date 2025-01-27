@@ -23,6 +23,11 @@ on:
         default: 'true'
         required: false
         type: string
+      sentry:
+        description: "Should we use sentry?"
+        default: 'false'
+        required: false
+        type: string
 
 jobs:
   release:
