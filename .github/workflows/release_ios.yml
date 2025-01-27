@@ -23,11 +23,6 @@ on:
         default: 'true'
         required: false
         type: string
-      sentry:
-        description: "Should we use sentry?"
-        default: 'true'
-        required: false
-        type: string
 
 jobs:
   release:
@@ -47,9 +42,9 @@ jobs:
       - uses: oleksiyrudenko/gha-git-credentials@v2-latest
         with:
           token: '${{ secrets.GITHUB_TOKEN }}'
-          actor: farfromrefug
-          name: Martin Guillon
-          email: dev@akylas.fr
+          actor: vallemar
+          name: Juan de Dios
+          email: vallemardeveloper@gmail.com
       
       - name: Git config
         run: |
@@ -160,7 +155,7 @@ jobs:
 
       - name: publish
         run: |
-          bundle exec fastlane ios alpha create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} sentry:${{ inputs.sentry }} github:${{ inputs.github }}
+          bundle exec fastlane ios alpha create_tag:${{ inputs.publish }} publish:${{ inputs.publish }} github:${{ inputs.github }}
       
       - uses: actions/upload-artifact@v4
         with:
