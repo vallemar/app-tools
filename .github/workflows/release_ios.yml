@@ -71,19 +71,17 @@ jobs:
       - name: Enable CorePack
         run: |
           corepack enable 
-          yarn config get globalFolder # the yarn command will ensure the correct yarn version is downloaded and installed
 
       - name: Install NativeScript
         run: |
           python3 -m pip install --upgrade pip six
           npm i -g @akylas/nativescript-cli --ignore-scripts --legacy-peer-deps
-          ns package-manager set yarn2
           ns usage-reporting disable
           ns error-reporting disable
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn config get globalFolder)"
+      #- name: Get yarn cache directory path
+      #  id: yarn-cache-dir-path
+      #  run: echo "::set-output name=dir::$(yarn config get globalFolder)"
 
       - uses: actions/cache@v4
         name: Handle Gem Cache
@@ -117,9 +115,7 @@ jobs:
         uses: bahmutov/npm-install@v1
         with:
           useLockFile: false
-          install-command: yarn install --silent
-        env: 
-          YARN_ENABLE_IMMUTABLE_INSTALLS: false
+          install-command: npm install --silent
       
       - uses: oNaiPs/secrets-to-env-action@v1
         with:
